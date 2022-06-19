@@ -1,4 +1,4 @@
-# Defines
+# Defines sdad
 CC         = gcc
 OBJ_DIR    = ./obj
 SRC_DIR    = ./src
