@@ -6,7 +6,11 @@ GitHub: https://github.com/manoharmukku/multilayer-perceptron-in-c
 */
 
 /*
-./MLP 3 4,5,5 softmax,relu,tanh 1 sigmoid 0.01 10000 data/data_train.csv 1096 5 data/data_test.csv 27
+./MLP 3 4,5,5 softmax,relu,tanh 1 sigmoid 0.01 10000 data/data_train.csv 1096 5 data/data_test.csv 275 5
+*/
+
+/*
+The elapsed time is 25.930194 seconds (NO INTRINSICS)
 */
 
 #include "mlp_trainer.h"

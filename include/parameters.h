@@ -1,6 +1,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+#define INTRINSICS
+// #undef  INTRINSICS
+
 typedef struct {
     int n_hidden;
     int* hidden_layers_size;
