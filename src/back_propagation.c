@@ -8,9 +8,19 @@ GitHub: https://github.com/manoharmukku/multilayer-perceptron-in-c
 #include "back_propagation.h"
 
 void d_identity(int layer_size, double* layer_input, double* layer_output, double* layer_derivative) {
+#ifndef  INTRINSICS
     int i;
     for (i = 0; i < layer_size; i++)
         layer_derivative[i] = 1;
+    
+    // printf("\nIDENTITY i = %d\n", i);
+#else
+    int i;
+    for(i = 0; i < layer_size; i = i + 4)
+    {
+        
+    }
+#endif
 }
 
 void d_sigmoid(int layer_size, double* layer_input, double* layer_output, double* layer_derivative) {
@@ -20,9 +30,30 @@ void d_sigmoid(int layer_size, double* layer_input, double* layer_output, double
 }
 
 void d_tanh(int layer_size, double* layer_input, double* layer_output, double* layer_derivative) {
+#if(OPTIMIZATION == NONE)
     int i;
     for (i = 0; i < layer_size; i++)
         layer_derivative[i] = 1.0 - layer_output[i+1] * layer_output[i+1];
+    
+    // printf("\nTANH i = %d\n", i);
+#elif(OPTIMIZATION == AVX512)
+    __m512d a       = _mm512_set_pd(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+    __m512d b       = _mm512_load_pd(layer_output+4);
+    __m512d pow2    = _mm512_mul_pd(b, b);
+    __m512d final   = _mm512_sub_pd(a, pow2);
+    _mm512_storeu_ps((float*)layer_derivative, (__m512)final);
+#elif(OPTIMIZATION == AVX2)
+    __m256d a       = _mm256_set_pd(1.0, 1.0, 1.0, 1.0);
+    __m256d b       = _mm256_load_pd(layer_output+8);
+    __m256d pow2    = _mm256_mul_pd(b, b);
+    __m256d final   = _mm256_hsub_pd(a, pow2);
+    _mm256_storeu_ps((float*)layer_derivative, (__m256)final);
+    
+    b               = _mm256_load_pd(layer_output+8+32);
+    pow2            = _mm256_mul_pd(b, b);
+    final           = _mm256_hsub_pd(a, pow2);
+    _mm256_storeu_ps((float*)(layer_derivative+32), (__m256)final);
+#endif
 }
 
 void d_relu(int layer_size, double* layer_input, double* layer_output, double* layer_derivative) {
@@ -47,11 +78,10 @@ void calculate_local_gradient(parameters* param, int layer_no, int n_layers, int
     double* expected_output, double** local_gradient) {
     // Create memory for derivatives
     double** layer_derivatives = (double**)calloc(n_layers, sizeof(double*));
-
+    // printf("\n777\n");
     int i;
     for (i = 0; i < n_layers; i++)
         layer_derivatives[i] = (double*)calloc(layer_sizes[i], sizeof(double));
-
     // If output layer
     if (layer_no == n_layers-1) {
         // Error produced at the output layer

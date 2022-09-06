@@ -1,6 +1,13 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+
+#define NONE    0x00
+#define AVX512  0x01
+#define AVX2    0x02
+
+#define OPTIMIZATION    NONE
+
 typedef struct {
     int n_hidden;
     int* hidden_layers_size;

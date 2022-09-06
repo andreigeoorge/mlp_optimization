@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "parameters.h"
 
+#include <immintrin.h>
+
 void back_propagation(parameters*, int, int, int*, double**, double**);
 
 #endif
