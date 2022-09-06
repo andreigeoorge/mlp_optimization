@@ -91,7 +91,7 @@ void mlp_classifier(parameters* param, int* layer_sizes) {
     // Classify the test dataset on the test samples
     int test_example;
     for (test_example = 0; test_example < param->test_sample_size; test_example++) {
-        printf("Classifying test example %d of %d\r", test_example+1, param->test_sample_size);
+        // printf("Classifying test example %d of %d\r", test_example+1, param->test_sample_size);
         // Fill the input layer's input and output (both are equal) from data_test matrix for the given test example
         layer_outputs[0][0] = 1; // Bias term of input layer
         for (i = 0; i < param->feature_size-1; i++)
@@ -205,13 +205,13 @@ void mlp_classifier(parameters* param, int* layer_sizes) {
         double accuracy = (double)(true_positive + true_negative) / param->test_sample_size;
 
         // Print confusion matrix
-        printf("\n\nConfusion matrix\n");
-        printf("-----------------\n\n");
+        // printf("\n\nConfusion matrix\n");
+        // printf("-----------------\n\n");
 
-        printf("\t    |predicted 0\t predicted 1\n");
-        printf("--------------------------------------------\n");
-        printf("Actual 0    |%d\t\t%d\n\n", true_negative, false_positive);
-        printf("Actual 1    |%d\t\t%d\n\n", false_negative, true_positive);
+        // printf("\t    |predicted 0\t predicted 1\n");
+        // printf("--------------------------------------------\n");
+        // printf("Actual 0    |%d\t\t%d\n\n", true_negative, false_positive);
+        // printf("Actual 1    |%d\t\t%d\n\n", false_negative, true_positive);
 
         // Print the accuracy
         printf("\nAccuracy: %.2lf\n\n", accuracy * 100);
@@ -231,17 +231,17 @@ void mlp_classifier(parameters* param, int* layer_sizes) {
         }
 
         // Print the confusion matrix
-        printf("\t");
-        for (predicted_class = 1; predicted_class <= param->output_layer_size; predicted_class++)
-            printf("Predicted %d  ", predicted_class);
-        printf("\n---------------------------------------------------------------------------\n");
+        // printf("\t");
+        // for (predicted_class = 1; predicted_class <= param->output_layer_size; predicted_class++)
+            // printf("Predicted %d  ", predicted_class);
+        // printf("\n---------------------------------------------------------------------------\n");
 
-        for (actual_class = 0; actual_class < param->output_layer_size; actual_class++) {
-            printf("Actual %d | ", actual_class+1);
-            for (predicted_class = 0; predicted_class < param->output_layer_size; predicted_class++)
-                printf("%d\t", confusion_matrix[actual_class][predicted_class]);
-            printf("\n");
-        }
+        // for (actual_class = 0; actual_class < param->output_layer_size; actual_class++) {
+            // printf("Actual %d | ", actual_class+1);
+            // for (predicted_class = 0; predicted_class < param->output_layer_size; predicted_class++)
+                // printf("%d\t", confusion_matrix[actual_class][predicted_class]);
+            // printf("\n");
+        // }
 
         // Find the accuracy
         double accuracy = 0.0;

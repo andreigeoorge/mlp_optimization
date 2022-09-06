@@ -30,24 +30,29 @@ void d_sigmoid(int layer_size, double* layer_input, double* layer_output, double
 }
 
 void d_tanh(int layer_size, double* layer_input, double* layer_output, double* layer_derivative) {
-#ifndef  INTRINSICS
+#if(OPTIMIZATION == NONE)
     int i;
     for (i = 0; i < layer_size; i++)
         layer_derivative[i] = 1.0 - layer_output[i+1] * layer_output[i+1];
     
     // printf("\nTANH i = %d\n", i);
-#else
-    // printf("\n000\n");
+#elif(OPTIMIZATION == AVX512)
+    __m512d a       = _mm512_set_pd(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+    __m512d b       = _mm512_load_pd(layer_output+4);
+    __m512d pow2    = _mm512_mul_pd(b, b);
+    __m512d final   = _mm512_sub_pd(a, pow2);
+    _mm512_storeu_ps((float*)layer_derivative, (__m512)final);
+#elif(OPTIMIZATION == AVX2)
     __m256d a       = _mm256_set_pd(1.0, 1.0, 1.0, 1.0);
-    // __m512d a       = _mm512_set_pd(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-    __m256d b       = _mm256_load_pd(layer_output+4);
-    // __m512d b       = _mm512_load_pd(layer_output+4);
+    __m256d b       = _mm256_load_pd(layer_output+8);
     __m256d pow2    = _mm256_mul_pd(b, b);
-    // __m512d pow2    = _mm512_mul_pd(b, b);
     __m256d final   = _mm256_hsub_pd(a, pow2);
-    // __m512d final   = _mm512_sub_pd(a, pow2);
     _mm256_storeu_ps((float*)layer_derivative, (__m256)final);
-    // _mm512_storeu_ps((float*)layer_derivative, (__m512)final);
+    
+    b               = _mm256_load_pd(layer_output+8+32);
+    pow2            = _mm256_mul_pd(b, b);
+    final           = _mm256_hsub_pd(a, pow2);
+    _mm256_storeu_ps((float*)(layer_derivative+32), (__m256)final);
 #endif
 }
 

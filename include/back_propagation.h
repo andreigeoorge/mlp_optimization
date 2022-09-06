@@ -5,9 +5,7 @@
 #include <stdlib.h>
 #include "parameters.h"
 
-#ifdef  INTRINSICS
 #include <immintrin.h>
-#endif
 
 void back_propagation(parameters*, int, int, int*, double**, double**);
 

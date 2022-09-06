@@ -6,11 +6,18 @@ GitHub: https://github.com/manoharmukku/multilayer-perceptron-in-c
 */
 
 /*
-./MLP 3 4,5,5 softmax,relu,tanh 1 sigmoid 0.01 10000 data/data_train.csv 1096 5 data/data_test.csv 275 5
+./MLP 3 8,8,8 softmax,relu,sigmoid 1 tanh 0.01 10000 data/data_train.csv 1096 5 data/data_test.csv 275 5
 */
 
 /*
-The elapsed time is 25.930194 seconds (NO INTRINSICS)
+The elapsed time is 50.012012 seconds
+OPTIMIZATION: NONE
+
+The elapsed time is 52.522168 seconds
+OPTIMIZATION: AVX2
+
+The elapsed time is 53.766068 seconds
+OPTIMIZATION: AVX512
 */
 
 #include "mlp_trainer.h"
@@ -221,8 +228,8 @@ int main(int argc, char** argv) {
     printf("\nDone.\n\n");
 
     // Classify the test data using the trained parameter weights
-    printf("Classifying:\n");
-    printf("------------\n");
+    // printf("Classifying:\n");
+    // printf("------------\n");
     mlp_classifier(param, layer_sizes);
     //printf("\nDone.\nOutput file generated\n");
 
@@ -256,7 +263,14 @@ int main(int argc, char** argv) {
     free(param->hidden_layers_size);
     free(param);
     
-    printf("\nThe elapsed time is %f seconds\n\n", time_elapsed);
+    printf("\nThe elapsed time is %f seconds\n", time_elapsed);
+#if(OPTIMIZATION == NONE)
+    printf("OPTIMIZATION: NONE\n\n");
+#elif(OPTIMIZATION == AVX512)
+    printf("OPTIMIZATION: AVX512\n\n");
+#elif(OPTIMIZATION == AVX2)
+    printf("OPTIMIZATION: AVX2\n\n");
+#endif
 
     return 0;
 }
